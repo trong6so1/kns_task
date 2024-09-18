@@ -2,7 +2,7 @@
   <Menubar
     :model="items"
     class="w-100 text-white"
-    :style="'background-color : ' + background"
+    :style="`background-color: ${background.headerColor}`"
     focusOnHover="false"
   >
     <template #start>
@@ -13,30 +13,23 @@
       </router-link>
     </template>
     <template #item="{ item, props, hasSubmenu, root }">
-      <Select
-        v-model="background"
-        :options="hasSubmenu"
-        optionLabel="name"
-        placeholder="Theme"
-        class="w-full md:w-56"
-        v-if="item.label == 'Theme'"
-        @change="changeTheme(item.value)"
-      />
-
       <a
         class="flex items-center mx-4"
         :class="{ 'bg-white px-2 py-1': !root }"
         v-bind="props.action"
-        v-else
       >
         <img :src="item.image" alt="" v-if="item.image" />
         <span :class="item.icon" />
-        <span class="ml-2" :class="{ 'text-white': root, 'text-dark': !root }">{{
+        <span class="ms-2" :class="{ 'text-white': root, 'text-dark': !root }"
+        >{{
           item.label
+        }}</span>
+        <span :class="{ 'text-white': root, 'text-dark': !root }" @click="changeTheme(item)" v-if="item.headerColor" >{{
+          item.name
         }}</span>
         <i
           v-if="hasSubmenu && !item.image"
-          :clsas="[
+          :class="[
             'pi pi-angle-down',
             { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root },
           ]"
@@ -52,19 +45,26 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import Menubar from "primevue/menubar";
-import { field, theme } from "./field.js";
-import Select from "primevue/select";
+import { field } from "./field.js";
+import stores from '@/stores/index.js'
+
 const items = ref([]);
-const background = ref("");
+const background = ref({});
 const changeTheme = (theme) => {
-  console.log(theme);
+  stores.dispatch('setTheme', theme);
+  background.value = stores.state.theme.theme;
 };
 onMounted(() => {
-  console.log(field);
   items.value = field;
-  if (!background.value) background.value = theme.lightblue;
+  background.value = stores.state.theme.theme;
 });
 </script>
+
+<style>
+.p-menubar{
+  padding: 0;
+}
+</style>
 
 <style scoped>
 ::v-deep .p-menubar-start {
