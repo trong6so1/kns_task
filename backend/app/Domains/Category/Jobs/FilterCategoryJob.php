@@ -27,9 +27,10 @@ class FilterCategoryJob extends Job
      */
     public function handle()
     {
-        if(isset($this->input['keyword'])){
+        if(isset($this->request['keyword'])){
+
             $this->query = $this->query->whereHas('description', function($query){
-                $query->where('title', 'LIKE', '%Trai Cay%');
+                $query->where('title', 'LIKE', '%'.$this->request['keyword'].'%');
             });
         }
 

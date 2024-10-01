@@ -24,7 +24,7 @@ class GetEditJob extends Job
      *
      * @return void
      */
-    public function __construct(int $id, array $select, string $modelClass, array $nestedRelations = [])
+    public function __construct($id, array $select=[], string $modelClass, array $nestedRelations = [])
     {
         $this->id = $id;
         $this->select = $select;
@@ -40,9 +40,12 @@ class GetEditJob extends Job
     public function handle()
     {
         $model = new $this->modelClass();
+        if(!empty($this->select))
+        {
+            $model = $model->select($this->select);
+        }
         $model = $model
-            ->withoutGlobalScope(WhereScope::class)
-            ->select($this->select)->with($this->nestedRelations)
+            ->with($this->nestedRelations)
             ->find($this->id);
 
         return !empty($model) ? $model->toArray() : false;

@@ -24,9 +24,8 @@ Route::group(['prefix' => 'category'], function() {
         CategoryController::class,
         'index'
     ]);
-
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
-    });
-
+    Route::get('edit/{id}', [
+        CategoryController::class,
+        'getCategory'
+    ]);
 });

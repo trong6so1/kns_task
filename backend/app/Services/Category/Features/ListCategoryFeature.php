@@ -14,7 +14,7 @@ use App\Domains\Http\Jobs\RespondWithJsonJob;
 use Illuminate\Http\Request;
 use Lucid\Units\Feature;
 
-class CategoryFeature extends Feature
+class ListCategoryFeature extends Feature
 {
     public function handle(Request $request)
     {
