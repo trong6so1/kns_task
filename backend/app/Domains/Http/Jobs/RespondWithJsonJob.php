@@ -18,6 +18,7 @@ class RespondWithJsonJob extends Job
     protected $content;
     protected $headers;
     protected $options;
+    protected $message;
 
     public function __construct($content = '', $message = '', $status = 200, array $headers = [], $options = 0)
     {

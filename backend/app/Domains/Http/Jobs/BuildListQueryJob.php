@@ -21,7 +21,7 @@ class BuildListQueryJob extends Job
      *
      * @return void
      */
-    public function __construct(array $select, string $modelClass)
+    public function __construct(array $select = [], string $modelClass)
     {
         $this->modelClass = $modelClass;
         $this->select = $select;
@@ -35,9 +35,10 @@ class BuildListQueryJob extends Job
     public function handle()
     {
         $query = new $this->modelClass();
-
-        $query = $query->select($this->select);
-
+        if(!empty($this->select))
+        {
+            $query = $query->select($this->select);
+        }
         return $query;
     }
 }

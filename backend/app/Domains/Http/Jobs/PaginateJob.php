@@ -23,7 +23,7 @@ class PaginateJob extends Job
      *
      * @return void
      */
-    public function __construct(Builder $query, array $input, int $defaultLimit)
+    public function __construct($query, array $input, int $defaultLimit)
     {
         $this->query = $query;
         $this->input = $input;

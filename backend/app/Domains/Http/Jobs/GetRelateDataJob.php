@@ -14,7 +14,6 @@ use Lucid\Units\Job;
 
 class GetRelateDataJob extends Job
 {
-    protected $input;
     protected $query;
     protected $nestedRelations;
 
@@ -23,9 +22,8 @@ class GetRelateDataJob extends Job
      *
      * @return void
      */
-    public function __construct(array $input, Builder $query, array $nestedRelations = [])
+    public function __construct($query, array $nestedRelations = [])
     {
-        $this->input = $input;
         $this->query = $query;
         $this->nestedRelations = $nestedRelations;
     }
