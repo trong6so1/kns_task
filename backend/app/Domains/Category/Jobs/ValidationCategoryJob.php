@@ -28,14 +28,14 @@ class ValidationCategoryJob extends Job
     public function handle()
     {
         $rules = [
-            'name_en' => 'required|max:200',
-            'name_vi' => 'required|max:200',
+            'name_en' => 'required|max:200|unique_title',
+            'name_vi' => 'required|max:200|unique_title',
             'keyword_en' => 'max:200',
             'keyword_vi' => 'max:200',
-            'description_en' => 'max:200',
-            'description_vi' => 'max:200',
-            'parent' => 'required',
-            'url' => 'required',
+            'description_en' => 'max:300',
+            'description_vi' => 'max:300',
+            'parent' => 'required|parent',
+            'url' => 'required|unique:sc_shop_category,alias,id',
             'image' => 'required',
             'sort' => 'required'
         ];

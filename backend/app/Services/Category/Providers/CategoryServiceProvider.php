@@ -2,6 +2,7 @@
 
 namespace App\Services\Category\Providers;
 
+use App\Validators\CustomValidator;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +27,9 @@ class CategoryServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom([
             realpath(__DIR__ . '/../database/migrations')
         ]);
+        $this->app->validator->resolver(function ($category, $data, $rules, $messages, $attributes) {
+            return new CustomValidator($category, $data, $rules, $messages, $attributes);
+        });
     }
 
     /**

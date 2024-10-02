@@ -6,6 +6,9 @@ use App\Data\Models\Category;
 use App\Data\Models\CategoryDescription;
 use Lucid\Units\Job;
 use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\fileExists;
+
 class CreateCategoryJob extends Job
 {
     /**
@@ -29,7 +32,7 @@ class CreateCategoryJob extends Job
         $category = new Category();
         $category->fill([
             'id' => Str::random(16),
-            'image' => '/data/category/'. $this->input['image'],
+            'image' => $this->saveImage($this->input['image']),
             'alias' => $this->input['url'],
             'parent' => $this->input['parent'],
             'sort' => $this->input['sort'],
@@ -37,7 +40,6 @@ class CreateCategoryJob extends Job
             'status' => $this->input['status']
         ]);
         $this->saveDescription($this->input, $category->id);
-        $this->saveImage($this->input['image'], $category->image);
         $category->save();
         return $category;
     }
@@ -60,7 +62,18 @@ class CreateCategoryJob extends Job
         $descriptionVi->save();
     }
 
-    private function saveImage($path, $image){
-        file($path)->storeAs($image, 'abc.jpg');
+
+    private function saveImage($path){
+        $fileName = pathinfo($path, PATHINFO_FILENAME);
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $folderPath = public_path('data/category');
+        $countFile = count(glob($folderPath . '/' . $fileName. '*'. $extension));
+        $fileName = $countFile > 0 ? $fileName.$countFile : $fileName;
+        $filePath = $folderPath . '/' . $fileName . '.' . $extension;
+        if(!file_exists($folderPath))
+        {
+            mkdir($folderPath, 0755, true);
+        }
+        rename($path, $filePath);
     }
 }
