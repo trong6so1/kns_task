@@ -10,6 +10,7 @@ class Category extends Model
     use HasFactory;
     protected $keyType = 'string';
     protected $table = 'sc_shop_category';
+    public $incrementing = false;
 
     public function parentDescription(){
         return $this->belongsTo(Category::class, 'parent', 'id');
@@ -18,4 +19,15 @@ class Category extends Model
     public function description(){
         return $this->hasMany(CategoryDescription::class, 'category_id', 'id');
     }
+
+    protected $fillable = [
+            'id',
+            'image',
+            'alias',
+            'parent',
+            'sort',
+            'top',
+            'status'
+        ];
+
 }

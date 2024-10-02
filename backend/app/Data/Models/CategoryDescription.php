@@ -10,4 +10,5 @@ class CategoryDescription extends Model
     use HasFactory;
     protected $keyType = 'string';
     protected $table = "sc_shop_category_description";
+    public $timestamps = FALSE;
 }

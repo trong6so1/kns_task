@@ -28,4 +28,12 @@ Route::group(['prefix' => 'category'], function() {
         CategoryController::class,
         'getCategory'
     ]);
+    Route::get('get-all-category-name', [
+        CategoryController::class,
+        'getAllCategoryName'
+    ]);
+    Route::post('create', [
+        CategoryController::class,
+        'create'
+    ]);
 });

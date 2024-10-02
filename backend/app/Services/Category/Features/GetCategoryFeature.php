@@ -4,7 +4,6 @@ namespace App\Services\Category\Features;
 
 use App\Data\Models\Category;
 use App\Domains\Auth\Jobs\CheckPermissionJob;
-use App\Domains\Http\Jobs\BuildListQueryJob;
 use App\Domains\Http\Jobs\GetEditJob;
 use App\Domains\Http\Jobs\RespondWithJsonErrorJob;
 use App\Domains\Http\Jobs\RespondWithJsonJob;
