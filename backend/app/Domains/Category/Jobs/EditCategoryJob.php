@@ -75,8 +75,8 @@ class EditCategoryJob extends Job
             $lang = $description->lang;
             $description->fill([
                 'title' => $this->input['name_'.$lang],
-                'keyword' => $this->input['keyword_'.$lang],
-                'description' => $this->input['description_'.$lang],
+                'keyword' => $this->input['keyword_'.$lang] ?? null,
+                'description' => $this->input['description_'.$lang] ?? null,
             ]);
             if($description->isDirty())
             {

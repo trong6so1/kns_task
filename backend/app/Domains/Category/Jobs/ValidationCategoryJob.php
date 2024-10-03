@@ -3,8 +3,8 @@
 namespace App\Domains\Category\Jobs;
 
 
-// use Illuminate\Support\Facades\Validator;
-use Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Lucid\Units\Job;
 
 class ValidationCategoryJob extends Job
@@ -28,14 +28,14 @@ class ValidationCategoryJob extends Job
     public function handle()
     {
         $rules = [
-            'name_en' => 'required|max:200|unique_title',
-            'name_vi' => 'required|max:200|unique_title',
+            'name_en' => 'required|max:200 ',
+            'name_vi' => 'required|max:200 ',
             'keyword_en' => 'max:200',
             'keyword_vi' => 'max:200',
             'description_en' => 'max:300',
             'description_vi' => 'max:300',
             'parent' => 'required|parent',
-            'url' => 'required|unique:sc_shop_category,alias,id',
+            'url' => ['required',Rule::unique('sc_shop_category','alias')->ignore($this->input['id'] ?? null)],
             'image' => 'required|file_exists',
             'sort' => 'required'
         ];

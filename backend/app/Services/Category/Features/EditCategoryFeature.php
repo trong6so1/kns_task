@@ -8,6 +8,7 @@ use App\Domains\Category\Jobs\EditCategoryJob;
 use App\Domains\Category\Jobs\ValidationCategoryJob;
 use App\Domains\Http\Jobs\FileModelJob;
 use App\Domains\Http\Jobs\RespondWithJsonErrorJob;
+use App\Domains\Http\Jobs\RespondWithJsonJob;
 use Illuminate\Http\Request;
 use Lucid\Units\Feature;
 
@@ -36,6 +37,7 @@ class EditCategoryFeature extends Feature
             'id' => $this->id,
             'nestedRelations' => []
         ]);
+        $request->request->add(['id' => $category->id]);
         if(!$category)
         {
             return $this->run(RespondWithJsonErrorJob::class,[
@@ -60,5 +62,6 @@ class EditCategoryFeature extends Feature
             'input' => $request->input(),
             'category' => $category
         ]);
+        return $this->run(new RespondWithJsonJob(['id'=> $category->id], $result['isDirty'] ? 'Update Successfully': 'Update Not Change'));
     }
 }

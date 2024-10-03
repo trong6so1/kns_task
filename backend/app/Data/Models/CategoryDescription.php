@@ -9,6 +9,7 @@ class CategoryDescription extends Model
 {
     use HasFactory;
     protected $keyType = 'string';
+    protected  $primaryKey = 'category_id';
     protected $table = "sc_shop_category_description";
     public $timestamps = FALSE;
     protected $fillable = [
@@ -18,4 +19,8 @@ class CategoryDescription extends Model
         'keyword',
         'description'
     ];
+    public function getKey()
+    {
+        return ['category','lang'];
+    }
 }
