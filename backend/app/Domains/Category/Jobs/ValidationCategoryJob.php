@@ -36,7 +36,7 @@ class ValidationCategoryJob extends Job
             'description_vi' => 'max:300',
             'parent' => 'required|parent',
             'url' => 'required|unique:sc_shop_category,alias,id',
-            'image' => 'required',
+            'image' => 'required|file_exists',
             'sort' => 'required'
         ];
         $attributes = [

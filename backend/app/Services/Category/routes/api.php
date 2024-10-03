@@ -28,6 +28,10 @@ Route::group(['prefix' => 'category'], function() {
         CategoryController::class,
         'getCategory'
     ]);
+    Route::post('edit/{id}', [
+        CategoryController::class,
+        'editCategory'
+    ]);
     Route::get('get-all-category-name', [
         CategoryController::class,
         'getAllCategoryName'

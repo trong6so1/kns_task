@@ -17,9 +17,12 @@ class CreateCategoryJob extends Job
      * @return void
      */
     private $input;
-    public function __construct($input)
+    private $model;
+    private $folderPath = '/data/category';
+    public function __construct(array $input, $model)
     {
         $this->input = $input;
+        $this->model = $model;
     }
 
     /**
@@ -29,19 +32,18 @@ class CreateCategoryJob extends Job
      */
     public function handle()
     {
-        $category = new Category();
-        $category->fill([
+        $this->model->fill([
             'id' => Str::random(16),
-            'image' => $this->saveImage($this->input['image']),
+            'image' => $this->folderPath.'/'.$this->saveImage($this->input['image']),
             'alias' => $this->input['url'],
             'parent' => $this->input['parent'],
             'sort' => $this->input['sort'],
             'top' => $this->input['top'],
             'status' => $this->input['status']
         ]);
-        $this->saveDescription($this->input, $category->id);
-        $category->save();
-        return $category;
+        $this->saveDescription($this->input, $this->model->id);
+        $this->model->save();
+        return $this->model;
     }
 
     private function saveDescription($data, $id)
@@ -66,14 +68,15 @@ class CreateCategoryJob extends Job
     private function saveImage($path){
         $fileName = pathinfo($path, PATHINFO_FILENAME);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $folderPath = public_path('data/category');
-        $countFile = count(glob($folderPath . '/' . $fileName. '*'. $extension));
-        $fileName = $countFile > 0 ? $fileName.$countFile : $fileName;
-        $filePath = $folderPath . '/' . $fileName . '.' . $extension;
+        $folderPath = public_path($this->folderPath);
         if(!file_exists($folderPath))
         {
             mkdir($folderPath, 0755, true);
         }
+        $countFile = count(glob($folderPath . '/' . $fileName. '*'. $extension));
+        $fileName = $countFile > 0 ? $fileName.$countFile.$extension : $fileName.'.'.$extension;
+        $filePath = $folderPath . '/' . $fileName;
         rename($path, $filePath);
+        return $fileName;
     }
 }

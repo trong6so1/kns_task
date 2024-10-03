@@ -4,31 +4,50 @@ namespace App\Services\Category\Features;
 
 use App\Data\Models\Category;
 use App\Domains\Auth\Jobs\CheckPermissionJob;
-use App\Domains\Category\Jobs\CreateCategoryJob;
+use App\Domains\Category\Jobs\EditCategoryJob;
 use App\Domains\Category\Jobs\ValidationCategoryJob;
-use App\Domains\Http\Jobs\GetNewModelClassJob;
-use App\Domains\Http\Jobs\NewModelClassJob;
+use App\Domains\Http\Jobs\FileModelJob;
 use App\Domains\Http\Jobs\RespondWithJsonErrorJob;
-use App\Domains\Http\Jobs\RespondWithJsonJob;
 use Illuminate\Http\Request;
 use Lucid\Units\Feature;
 
-class CreateCategoryFeature extends Feature
+class EditCategoryFeature extends Feature
 {
+    private $id;
+    function __construct(string $id)
+    {
+        $this->id  = $id;
+    }
+
     public function handle(Request $request)
     {
         $permission = $this->run(CheckPermissionJob::class);
 
-        if(!$permission){
-            return $this->run(RespondWithJsonErrorJob::class,[
+        if(!$permission)
+        {
+            $this->run(RespondWithJsonErrorJob::class,[
                 'message' => FORBIDDEN_MSG,
                 'status' => FORBIDDEN_STATUS
             ]);
         };
 
+        $category = $this->run(FileModelJob::class,[
+            'model' => Category::class,
+            'id' => $this->id,
+            'nestedRelations' => []
+        ]);
+        if(!$category)
+        {
+            return $this->run(RespondWithJsonErrorJob::class,[
+                'message' => "Category not found",
+                'status' => ERROR_STATUS
+            ]);
+        }
+
         $validation = $this->run(ValidationCategoryJob::class,[
             'input' => $request->input()
         ]);
+
         if($validation->fails())
         {
            return $this->run(RespondWithJsonErrorJob::class, [
@@ -36,13 +55,10 @@ class CreateCategoryFeature extends Feature
             'status' => ERROR_STATUS
            ]);
         };
-        $model = $this->run(GetNewModelClassJob::class,[
-            'model' => Category::class
-        ]);
-        $result = $this->run(CreateCategoryJob::class,[
+
+        $result = $this->run(EditCategoryJob::class,[
             'input' => $request->input(),
-            'model' => $model
+            'category' => $category
         ]);
-        return $this->run(new RespondWithJsonJob($result, DONE_MSG));
     }
 }

@@ -11,4 +11,11 @@ class CategoryDescription extends Model
     protected $keyType = 'string';
     protected $table = "sc_shop_category_description";
     public $timestamps = FALSE;
+    protected $fillable = [
+        'category_id',
+        'lang',
+        'title',
+        'keyword',
+        'description'
+    ];
 }

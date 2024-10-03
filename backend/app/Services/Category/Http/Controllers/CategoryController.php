@@ -3,6 +3,7 @@
 namespace App\Services\Category\Http\Controllers;
 
 use App\Services\Category\Features\CreateCategoryFeature;
+use App\Services\Category\Features\EditCategoryFeature;
 use App\Services\Category\Features\GetAllCategoryNameFeature;
 use App\Services\Category\Features\GetCategoryFeature;
 use App\Services\Category\Features\ListCategoryFeature;
@@ -27,5 +28,11 @@ class CategoryController extends Controller
 
     public function create(){
         return $this->serve(CreateCategoryFeature::class);
+    }
+
+    public function editCategory($id){
+        return $this->serve(EditCategoryFeature::class,[
+            'id' => $id
+        ]);
     }
 }
