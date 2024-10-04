@@ -35,7 +35,7 @@ class CreateCategoryJob extends Job
         $this->model->fill([
             'id' => Str::random(16),
             'image' => $this->folderPath.'/'.$this->saveImage($this->input['image']),
-            'alias' => $this->input['url'],
+            'alias' => $this->input['alias'],
             'parent' => $this->input['parent'],
             'sort' => $this->input['sort'],
             'top' => $this->input['top'],
@@ -51,14 +51,14 @@ class CreateCategoryJob extends Job
         $descriptionEn = new CategoryDescription();
         $descriptionEn->category_id = $id;
         $descriptionEn->lang = 'en';
-        $descriptionEn->title = $data['name_en'];
+        $descriptionEn->title = $data['title_en'];
         $descriptionEn->keyword = $data['keyword_en'] ?? null;
         $descriptionEn->description = $data['description_en'] ?? null;
         $descriptionEn->save();
         $descriptionVi = new CategoryDescription();
         $descriptionVi->category_id = $id;
         $descriptionVi->lang = 'vi';
-        $descriptionVi->title = $data['name_vi'];
+        $descriptionVi->title = $data['title_vi'];
         $descriptionVi->keyword = $data['keyword_vi'] ?? null;
         $descriptionVi->description = $data['description_vi'] ?? null;
         $descriptionVi->save();
@@ -74,9 +74,10 @@ class CreateCategoryJob extends Job
             mkdir($folderPath, 0755, true);
         }
         $countFile = count(glob($folderPath . '/' . $fileName. '*'. $extension));
-        $fileName = $countFile > 0 ? $fileName.$countFile.$extension : $fileName.'.'.$extension;
+        $fileName = $countFile > 0 ? $fileName.'('.$countFile.').'.$extension : $fileName.'.'.$extension;
+
         $filePath = $folderPath . '/' . $fileName;
-        rename($path, $filePath);
+        copy($path, $filePath);
         return $fileName;
     }
 }

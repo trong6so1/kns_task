@@ -2,12 +2,11 @@
 
 namespace App\Domains\Category\Jobs;
 
-
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Lucid\Units\Job;
 
-class ValidationCategoryJob extends Job
+class ValidationEditCategoryJob extends Job
 {
     /**
      * Create a new job instance.
@@ -28,16 +27,15 @@ class ValidationCategoryJob extends Job
     public function handle()
     {
         $rules = [
-            'title_en' => 'required|max:200 ',
-            'title_vi' => 'required|max:200 ',
+            'title_en' => 'min:1|max:200 ',
+            'title_vi' => 'min:1|max:200 ',
             'keyword_en' => 'max:200',
             'keyword_vi' => 'max:200',
             'description_en' => 'max:300',
             'description_vi' => 'max:300',
-            'parent' => 'required|parent',
-            'alias' => ['required',Rule::unique('sc_shop_category','alias')->ignore($this->input['id'] ?? null)],
-            'image' => 'required',
-            'sort' => 'required'
+            'parent' => 'parent',
+            'alias' => ['min:1',Rule::unique('sc_shop_category','alias')->ignore($this->input['id'] ?? null)],
+            'image' => 'file_exists',
         ];
         $attributes = [
             'title_en' => __('category.title_en'),

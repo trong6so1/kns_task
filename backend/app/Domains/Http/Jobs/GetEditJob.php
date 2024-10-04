@@ -24,7 +24,7 @@ class GetEditJob extends Job
      *
      * @return void
      */
-    public function __construct($id, array $select=[], string $modelClass, array $nestedRelations = [])
+    public function __construct($id, array $select = [], string $modelClass, array $nestedRelations = [])
     {
         $this->id = $id;
         $this->select = $select;

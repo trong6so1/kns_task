@@ -4,6 +4,7 @@ namespace App\Domains\Category\Jobs;
 
 use App\Data\Models\Category;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Lucid\Units\Job;
 
 class EditCategoryJob extends Job
@@ -30,22 +31,23 @@ class EditCategoryJob extends Job
      */
     public function handle()
     {
-        $this->category->fill([
-            'image' => $this->saveImage($this->category['image'], $this->input['image']),
-            'alias' => $this->input['url'],
-            'parent' => $this->input['parent'],
-            'sort' => $this->input['sort'],
-            'top' => $this->input['top'],
-            'status' => $this->input['status'],
-        ]);
+        if(!empty($this->input['image']))
+        {
+            $this->category->image = $this->saveImage($this->category->image,$this->input['image']);
+            unset($this->input['image']);
+        }
+        $this->category->fill(
+            $this->input
+        );
         if ($this->category->isDirty()) {
+
             $this->isDirty = true;
             $this->category->save();
         }
         $this->saveDescription($this->category);
         return [
             'category' => $this->category,
-            'isDirty' => $this->isDirty
+            'isDirty' => $this->isDirty,
         ];
     }
 
@@ -57,31 +59,37 @@ class EditCategoryJob extends Job
         $fileName = pathinfo($path, PATHINFO_FILENAME);
         $extension = pathinfo($path, PATHINFO_EXTENSION);
         $folderPath = public_path($this->folderPath);
-        if (!file_exists($folderPath)) {
+        if(!file_exists($folderPath))
+        {
             mkdir($folderPath, 0755, true);
         }
-        $countFile = count(glob($folderPath . '/' . $fileName . '*' . $extension));
-        $fileName = $countFile > 0 ? $fileName . $countFile . $extension : $fileName . '.' . $extension;
+        $countFile = count(glob($folderPath . '/' . $fileName. '*'. $extension));
+        $fileName = $countFile > 0 ? $fileName.'('.$countFile.').'.$extension : $fileName.'.'.$extension;
         $filePath = $folderPath . '/' . $fileName;
-        rename($path, $filePath);
-        return $folderPath . '/' . $fileName;
+        copy($path, $filePath);
+        return $this->folderPath . '/' . $fileName;
     }
 
     public function saveDescription($category)
     {
         $descriptions = $category->description;
-        foreach($descriptions as $description)
-        {
+        foreach ($descriptions as $description) {
             $lang = $description->lang;
             $description->fill([
-                'title' => $this->input['name_'.$lang],
-                'keyword' => $this->input['keyword_'.$lang] ?? null,
-                'description' => $this->input['description_'.$lang] ?? null,
+                'title' => $this->input['title_' . $lang] ?? $description->title,
+                'keyword' => $this->input['keyword_' . $lang] ?? $description->keyword,
+                'description' => $this->input['description_' . $lang] ?? $description->description,
             ]);
-            if($description->isDirty())
-            {
+            if ($description->isDirty()) {
+                DB::table('sc_Shop_category_description')
+                    ->where('lang', $description->lang)
+                    ->where('category_id', $description->category_id)
+                    ->update([
+                        'title' => $description->title,
+                        'keyword' => $description->keyword,
+                        'description' => $description->desciption,
+                    ]);
                 $this->isDirty = true;
-                $description->save();
             }
         }
     }

@@ -4,22 +4,20 @@ namespace App\Services\Category\Features;
 
 use App\Data\Models\Category;
 use App\Domains\Auth\Jobs\CheckPermissionJob;
-use App\Domains\Category\Jobs\EditCategoryJob;
-use App\Domains\Category\Jobs\ValidationEditCategoryJob;
+use App\Domains\Category\Jobs\DeleteCategoryJob;
 use App\Domains\Http\Jobs\FileModelJob;
 use App\Domains\Http\Jobs\RespondWithJsonErrorJob;
 use App\Domains\Http\Jobs\RespondWithJsonJob;
 use Illuminate\Http\Request;
 use Lucid\Units\Feature;
 
-class EditCategoryFeature extends Feature
+class DeleteCategoryFeature extends Feature
 {
     private $id;
-    function __construct(string $id)
+    function __construct($id)
     {
-        $this->id  = $id;
+        $this->id = $id;
     }
-
     public function handle(Request $request)
     {
         $permission = $this->run(CheckPermissionJob::class);
@@ -37,7 +35,6 @@ class EditCategoryFeature extends Feature
             'id' => $this->id,
             'nestedRelations' => []
         ]);
-        $request->request->add(['id' => $category->id]);
         if(!$category)
         {
             return $this->run(RespondWithJsonErrorJob::class,[
@@ -45,23 +42,9 @@ class EditCategoryFeature extends Feature
                 'status' => ERROR_STATUS
             ]);
         }
-
-        $validation = $this->run(ValidationEditCategoryJob::class,[
-            'input' => $request->input()
-        ]);
-
-        if($validation->fails())
-        {
-           return $this->run(RespondWithJsonErrorJob::class, [
-            'message' => $validation->errors()->getMessages(),
-            'status' => ERROR_STATUS
-           ]);
-        };
-
-        $result = $this->run(EditCategoryJob::class,[
-            'input' => $request->input(),
+        $result = $this->run(DeleteCategoryJob::class,[
             'category' => $category
         ]);
-        return $this->run(new RespondWithJsonJob(['id'=> $category->id], $result['isDirty'] ? 'Update Successfully': 'Update Not Change'));
+        return $this->run(new RespondWithJsonJob(['id'=> $result], 'Delete Successfully'));
     }
 }

@@ -11,41 +11,41 @@
 |
 */
 
-// Prefix: /api/category
+// Prefix: /api/brand
 
-use App\Services\Category\Http\Controllers\CategoryController;
+use App\Services\Brand\Http\Controllers\BrandController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'category'], function() {
+Route::group(['prefix' => 'brand'], function() {
 
     // Controllers live in src/Services/Category/Http/Controllers
 
     Route::get('/', [
-        CategoryController::class,
+        BrandController::class,
         'index'
     ]);
     Route::get('edit/{id}', [
-        CategoryController::class,
-        'getCategory'
+        BrandController::class,
+        'getBrand'
     ]);
     Route::post('edit/{id}', [
-        CategoryController::class,
-        'editCategory'
+        BrandController::class,
+        'editBrand'
     ]);
     Route::post('delete/{id}', [
-        CategoryController::class,
-        'deleteCategory'
+        BrandController::class,
+        'deleteBrand'
     ]);
     Route::post('update-status',[
-        CategoryController::class,
-        'updateStatusCategory'
+        BrandController::class,
+        'updateStatusBrand'
     ]);
-    Route::get('get-all-category-name', [
-        CategoryController::class,
-        'getAllCategoryName'
+    Route::get('get-all-Brand-name', [
+        BrandController::class,
+        'getAllBrandName'
     ]);
     Route::post('create', [
-        CategoryController::class,
+        BrandController::class,
         'create'
     ]);
 });

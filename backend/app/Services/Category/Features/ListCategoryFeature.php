@@ -30,12 +30,12 @@ class ListCategoryFeature extends Feature
 
         $category = $this->run(BuildListQueryJob::class,[
             'modelClass' => Category::class,
+            'select' => []
         ]);
         $category = $this->run(FilterCategoryJob::class,[
             'query' => $category,
             'request' => $request->input()
         ]);
-        // dd($request->input('lang'));
         $category = $this->run(GetRelateDataJob::class,[
             'query' => $category,
             'nestedRelations' => [
