@@ -10,6 +10,7 @@ class Brand extends Model
     use HasFactory;
     protected $table = 'sc_shop_brand';
     protected $keyType = 'string';
+    public $incrementing = FALSE;
     protected $fillable = [
         'id',
         'name',

@@ -9,8 +9,9 @@ class CustomValidator extends Validator
 {
     use CategoryTrait;
 
+
     public function validateFileExists($attribute, $value)
     {
-        return file_exists($value);
+        return file_exists($value) || file_exists(public_path($value));
     }
 }

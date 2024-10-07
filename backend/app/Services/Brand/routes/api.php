@@ -46,6 +46,6 @@ Route::group(['prefix' => 'brand'], function() {
     ]);
     Route::post('create', [
         BrandController::class,
-        'create'
+        'createBrand'
     ]);
 });

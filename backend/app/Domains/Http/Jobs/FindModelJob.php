@@ -22,7 +22,7 @@ class FindModelJob extends Job
      *
      * @return void
      */
-    public function __construct(string $modelClass, int $id, array $nestedRelations = [])
+    public function __construct(string $modelClass, string|int $id, array $nestedRelations = [])
     {
         $this->modelClass = $modelClass;
         $this->id = $id;
