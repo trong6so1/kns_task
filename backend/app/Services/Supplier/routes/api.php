@@ -11,37 +11,37 @@
 |
 */
 
-// Prefix: /api/brand
+// Prefix: /api/supplier
 
-use App\Services\Brand\Http\Controllers\BrandController;
+use App\Services\Supplier\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'brand'], function() {
+Route::group(['prefix' => 'supplier'], function() {
 
     // Controllers live in src/Services/Category/Http/Controllers
 
     Route::get('/', [
-        BrandController::class,
+        SupplierController::class,
         'index'
     ]);
     Route::get('edit/{id}', [
-        BrandController::class,
-        'getBrand'
+        SupplierController::class,
+        'getSupplier'
     ]);
     Route::post('edit/{id}', [
-        BrandController::class,
-        'editBrand'
+        SupplierController::class,
+        'editSupplier'
     ]);
     Route::post('delete/{id}', [
-        BrandController::class,
-        'deleteBrand'
+        SupplierController::class,
+        'deleteSupplier'
     ]);
     Route::post('update-status',[
-        BrandController::class,
-        'updateStatusBrand'
+        SupplierController::class,
+        'updateStatusSupplier'
     ]);
     Route::post('create', [
-        BrandController::class,
-        'createBrand'
+        SupplierController::class,
+        'createSupplier'
     ]);
 });
